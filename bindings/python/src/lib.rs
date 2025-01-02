@@ -1,7 +1,7 @@
 #![deny(missing_docs)]
 //! Dummy doc
 use memmap2::{Mmap, MmapOptions};
-use pyo3::exceptions::{PyException, PyFileNotFoundError};
+use pyo3::exceptions::{PyException, PyFileNotFoundError, PyKeyError};
 use pyo3::prelude::*;
 use pyo3::sync::GILOnceCell;
 use pyo3::types::IntoPyDict;
@@ -516,7 +516,7 @@ impl Open {
     /// ```
     pub fn get_tensor(&self, name: &str) -> PyResult<PyObject> {
         let info = self.metadata.info(name).ok_or_else(|| {
-            SafetensorError::new_err(format!("File does not contain tensor {name}",))
+            PyKeyError::new_err(format!("File does not contain tensor {name}",))
         })?;
         // let info = tensors.get(name).ok_or_else(|| {
         //     SafetensorError::new_err(format!("File does not contain tensor {name}",))
